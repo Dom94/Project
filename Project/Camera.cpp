@@ -39,7 +39,7 @@ namespace Project
 		}
 		else if( type == CameraType::ORTHOGRAPHIC )
 		{
-			return glm::ortho( -(float)WINDOW_WIDTH, (float)WINDOW_WIDTH, -(float)WINDOW_HEIGHT, (float)WINDOW_HEIGHT, -1.0f, 1.0f );
+			return glm::ortho( -(float)WINDOW_WIDTH/20, (float)WINDOW_WIDTH/20, -(float)WINDOW_HEIGHT/20, (float)WINDOW_HEIGHT/20, -1.0f, 1.0f );
 		}
 	}
 }

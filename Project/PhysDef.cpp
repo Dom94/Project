@@ -1,10 +1,15 @@
 #include "PhysDef.h"
 
+#include <iostream>
+
 namespace Project
 {
 	PhysDef::PhysDef()
 	{
 		localMatrix = glm::mat3( 1.0f );
+
+		physicsBodyDefinition = nullptr;
+		physicsBody = nullptr;
 	}
 
 	PhysDef::~PhysDef()
@@ -29,15 +34,34 @@ namespace Project
 
 	glm::mat4 PhysDef::getLocalMatrix()
 	{
-		glm::mat4 translationMatrix = glm::translate( glm::mat4( 1.0f ), glm::vec3( position, 0.0f ) );
-		glm::mat4 rotationMatrix = glm::mat4_cast( orientation );
-		glm::mat4 scaleMatrix = glm::scale( glm::mat4( 1.0f ), glm::vec3( scale, 1.0f ) );
+		glm::mat4 translationMatrix;
+		glm::mat4 rotationMatrix;
+		glm::mat4 scaleMatrix;
+
+		if( physicsBody != nullptr )
+		{
+			//std::cout << physicsBody->GetPosition().y << std::endl;
+			translationMatrix = glm::translate( glm::mat4( 1.0f ), glm::vec3( glm::vec2( physicsBody->GetPosition().x, physicsBody->GetPosition().y ), 0.0f ) );
+			rotationMatrix = glm::mat4_cast( glm::angleAxis( physicsBody->GetAngle(), glm::vec3( 0, 0, 1 ) ) );
+			scaleMatrix = glm::scale( glm::mat4( 1.0f ), glm::vec3( scale, 1.0f ) );
+		}
+		else
+		{
+			translationMatrix = glm::translate( glm::mat4( 1.0f ), glm::vec3( position, 0.0f ) );
+			rotationMatrix = glm::mat4_cast( orientation );
+			scaleMatrix = glm::scale( glm::mat4( 1.0f ), glm::vec3( scale, 1.0f ) );
+		}
 
 		return translationMatrix * rotationMatrix * scaleMatrix;
 	}
 
 	glm::vec2 PhysDef::getPosition()
 	{
+		if( physicsBody != nullptr )
+		{
+			position = glm::vec2( physicsBody->GetPosition().x, physicsBody->GetPosition().y );
+		}
+
 		return position;
 	}
 
@@ -49,6 +73,33 @@ namespace Project
 	glm::vec2 PhysDef::getScale()
 	{
 		return scale;
+	}
+
+	void PhysDef::setPhysicsBodyDefinition( b2World* world, b2BodyDef* pbd )
+	{
+		physicsBodyDefinition = pbd;
+
+		physicsBody = world->CreateBody( physicsBodyDefinition );
+	}
+
+	b2BodyDef* PhysDef::getPhysicsBodyDefinition()
+	{
+		return physicsBodyDefinition;
+	}
+
+	void PhysDef::setPhysicsFixture( b2FixtureDef* fd )
+	{
+		if( physicsBody != nullptr )
+		{
+			physicsFixture = fd;
+
+			physicsBody->CreateFixture( physicsFixture );
+		}
+	}
+
+	b2FixtureDef* PhysDef::getPhysicsFixture()
+	{
+		return physicsFixture;
 	}
 
 	void PhysDef::moveV( float dv )

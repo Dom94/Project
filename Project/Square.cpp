@@ -2,7 +2,7 @@
 
 namespace Project
 {
-	Square::Square( float size )
+	Square::Square( glm::vec2 size )
 	{
 		Vertex vertex1 = {glm::vec2( -0.5f, -0.5f ) * size, glm::vec2( -0.25f, 0.0f )};
 		Vertex vertex2 = {glm::vec2( 0.5f, -0.5f ) * size, glm::vec2( -0.25f, 0.0f )};

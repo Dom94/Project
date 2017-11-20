@@ -8,7 +8,7 @@ namespace Project
 	{
 		//functions
 	public:
-		Square( float size );
+		Square( glm::vec2 size );
 		~Square();
 
 	private:

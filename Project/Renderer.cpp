@@ -46,6 +46,7 @@ namespace Project
 		glUniformMatrix4fv( projectionLocation, 1, GL_FALSE, glm::value_ptr( projection ) );
 
 		model = square->getPhysDef()->getLocalMatrix();
+		std::cout << square->getPhysDef()->getPosition().y << std::endl;
 		glUniformMatrix4fv( modelLocation, 1, GL_FALSE, glm::value_ptr( model ) );
 		glUniformMatrix4fv( viewLocation, 1, GL_FALSE, glm::value_ptr( view ) );
 		glUniformMatrix4fv( projectionLocation, 1, GL_FALSE, glm::value_ptr( projection ) );

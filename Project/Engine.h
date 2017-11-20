@@ -5,6 +5,8 @@
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
 
+#include <Box2D\Box2D.h>
+
 #include <iostream>
 
 #include "Renderer.h"
@@ -30,6 +32,8 @@ namespace Project
 		virtual void run();
 
 	private:
+		void updateComponents();
+
 		void calculateFPS();
 
 		bool setupExtensions();
@@ -49,5 +53,6 @@ namespace Project
 		GLFWwindow* window;
 
 		std::vector<GameObject*> objects;
+		b2World* world;
 	};
 }

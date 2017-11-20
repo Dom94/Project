@@ -6,11 +6,15 @@ namespace Project
 	{
 		renderer = nullptr;
 		window = nullptr;
+
+		world = nullptr;
 	}
 
 	Engine::~Engine()
 	{
 		glfwTerminate();
+
+		delete world;
 	}
 
 	bool Engine::init()
@@ -49,6 +53,16 @@ namespace Project
 			//hangle events (user input etc)
 			glfwPollEvents();
 
+			//Physics update
+			if( world != nullptr )
+			{
+				//world->Step( (float)(1.0f/30.0f), 8, 3 );
+				world->Step( dt, 8, 3 );
+			}
+
+			//update the scene objects
+			updateComponents();
+
 			//Render loop
 			renderer->prerender();
 			renderer->render();
@@ -57,6 +71,14 @@ namespace Project
 
 		//TODO: MOVE TO EXTENSION CLEANUP
 		glfwTerminate();
+	}
+
+	void Engine::updateComponents()
+	{
+		for( int i = 0; i < objects.size(); i++ )
+		{
+			objects[i]->update( dt );
+		}
 	}
 
 	void Engine::calculateFPS()
@@ -81,7 +103,7 @@ namespace Project
 		glfwWindowHint( GLFW_CONTEXT_VERSION_MINOR, 1 );
 		glfwWindowHint( GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE );
 		glfwWindowHint( GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE );
-
+		
 		//create a window and context for rendering
 		window = glfwCreateWindow( WINDOW_WIDTH, WINDOW_HEIGHT, "Project", NULL, NULL );
 		if( window == nullptr )
@@ -104,7 +126,7 @@ namespace Project
 		int width;
 		int height;
 		glfwGetFramebufferSize( window, &width, &height );
-		glViewport( 0, 0, width - 50, height - 50 );
+		glViewport( 0, 0, width, height );
 
 		//assign all of the callbacks - TODO: MOVE TO INPUT INIT
 		glfwSetKeyCallback( window, key_callback );
